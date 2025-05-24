@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.HorizontalDivider
@@ -25,7 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,10 +40,12 @@ import com.wanted.task.presentation.theme.WantedWhite
 fun CompanySearchBar(
     value: String,
     onValueChange: (String) -> Unit,
+    onImeActionSearch: () -> Unit,
     placeholder: String = "텍스트를 입력하세요",
     trailingIcon: @Composable (() -> Unit)
 ) {
     val textStyle = TextStyle(fontSize = 16.sp)
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column {
         BasicTextField(
@@ -51,6 +57,15 @@ fun CompanySearchBar(
                 .fillMaxWidth()
                 .background(WantedWhite)
                 .padding(horizontal = 12.dp),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                    onImeActionSearch()
+                }
+            ),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -98,7 +113,8 @@ fun CompanySearchBarPreview() {
 
         CompanySearchBar(
             value = query,
-            onValueChange = { },
+            onValueChange = {},
+            onImeActionSearch = {},
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.Clear,
