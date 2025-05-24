@@ -75,7 +75,7 @@ dependencies {
     // HiltViewModel(), navigation
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Glide for bitmap
+    // Glide
     implementation (libs.glide)
 
     // Log Timber

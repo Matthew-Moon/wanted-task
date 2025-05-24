@@ -13,7 +13,7 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
-glide = "4.16.0"
+glide = "1.0.0-beta01"
 timber = "5.0.1"
 
 [libraries]
@@ -39,7 +39,7 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide = { module = "com.github.bumptech.glide:compose", version.ref = "glide" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [plugins]
