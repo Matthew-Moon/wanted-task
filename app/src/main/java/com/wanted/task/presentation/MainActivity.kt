@@ -1,4 +1,4 @@
-package com.wanted.task
+package com.wanted.task.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.wanted.task.ui.theme.WantedTaskTheme
+import com.wanted.task.presentation.theme.WantedTaskTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
