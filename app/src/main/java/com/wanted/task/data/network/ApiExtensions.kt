@@ -1,52 +1,49 @@
 package com.wanted.task.data.network
 
-import com.wanted.task.data.dto.ApiException
-import com.wanted.task.data.dto.ApiResponse
+import com.wanted.task.data.dto.ApiError
 import com.wanted.task.data.dto.ApiResult
+import org.json.JSONObject
 import retrofit2.Response
 
+typealias ResponseDto<T> = Response<T>
 
-typealias ResponseDto<T> = Response<ApiResponse<T>>
-
-/**
- * API 호출에 대한 공통 처리 함수
- * - HTTP 오류, 응답 실패, 예외 상황을 모두 ApiResult로 매핑
- */
-suspend inline fun <T> safeApiCall(
-    crossinline call: suspend () -> Response<ApiResponse<T>>
-): ApiResult<T> {
+suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResult<T> {
     return try {
-        val response = call()
-
-        val body = response.body()
-        if (body != null) {
-            if (body.success) {
-                ApiResult.Success(body.data)
-            } else {
-                ApiResult.Failure(
-                    code = body.error?.code ?: "UNKNOWN",
-                    message = body.error?.message ?: "알 수 없는 오류"
-                )
-            }
+        val response = apiCall()
+        if (response.isSuccessful) {
+            response.body()?.let {
+                ApiResult.Success(it)
+            } ?: ApiResult.Failure(ApiError(null, "Empty response body"))
         } else {
-            ApiResult.Failure("EMPTY_BODY", "응답 본문이 비어 있습니다.")
+            val errorBody = response.errorBody()?.string()
+            val apiError = parseApiError(errorBody)
+            ApiResult.Failure(apiError)
         }
     } catch (e: Exception) {
-        ApiResult.Exception(e)
+        ApiResult.Failure(ApiError(null, e.localizedMessage ?: "Unknown error"))
     }
 }
 
-// 기본 버전: data != null 강제
-inline fun <T, R> ApiResult<T>.toResult(transform: (T) -> R): Result<R> {
-    return when (this) {
-        is ApiResult.Success -> {
-            val nonNullData = data ?: return Result.failure(
-                NullPointerException("API 성공 응답이지만 data가 null입니다.")
-            )
-            Result.success(transform(nonNullData))
-        }
+fun parseApiError(errorBody: String?): ApiError {
+    return try {
+        if (errorBody == null) return ApiError(null, "No error body")
 
-        is ApiResult.Failure -> Result.failure(ApiException(code, raw, message))
-        is ApiResult.Exception -> Result.failure(exception)
+        val json = JSONObject(errorBody)
+        val rawCode = json.optString("error_code", "")
+        val code = if (rawCode.isBlank()) null else rawCode
+
+        val message = json.optString("message", "Unknown server error")
+
+        ApiError(code, message)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ApiError(null, "Malformed error response")
+    }
+}
+
+inline fun <T, R> ApiResult<T>.toResult(transform: (T) -> R): ApiResult<R> {
+    return when (this) {
+        is ApiResult.Success -> ApiResult.Success(transform(this.data))
+        is ApiResult.Failure -> this
     }
 }

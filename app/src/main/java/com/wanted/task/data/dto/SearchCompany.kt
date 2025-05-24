@@ -1,9 +1,11 @@
 package com.wanted.task.data.dto
 
+import androidx.core.net.toUri
+import com.google.gson.annotations.SerializedName
 import com.wanted.task.domain.model.CompanyModel
 import com.wanted.task.domain.model.LogoImgModel
+import com.wanted.task.domain.model.PagedCompanyModel
 import com.wanted.task.domain.model.TitleImgModel
-import kotlinx.serialization.SerialName
 
 data class SearchCompany(
     val companies: List<Company>,
@@ -11,24 +13,24 @@ data class SearchCompany(
 )
 
 data class Company(
-    val description: String,
+    val description: String?,
     val id: Int,
-    @SerialName("logo_img")
-    val logoImg: LogoImg,
+    @SerializedName("logo_img")
+    val logoImg: LogoImg?,
     val name: String,
-    @SerialName("title_img")
-    val titleImg: TitleImg,
+    @SerializedName("title_img")
+    val titleImg: TitleImg?,
     val url: String
 )
 
 data class Links(
-    val next: Any,
-    val prev: Any
+    val next: Any?,
+    val prev: Any?
 )
 
 data class LogoImg(
-    val origin: String,
-    val thumb: String
+    val origin: String?,
+    val thumb: String?
 )
 
 data class TitleImg(
@@ -37,17 +39,33 @@ data class TitleImg(
 )
 
 
+
+fun SearchCompany.toDomain(): PagedCompanyModel {
+    return PagedCompanyModel(
+        companies = companies.map { it.toDomain() },
+        nextOffset = extractOffset(links.next),
+        prevOffset = extractOffset(links.prev)
+    )
+}
+
 fun Company.toDomain(): CompanyModel = CompanyModel(
-    description = description,
+    description = description ?: "회사 소개가 곧 등록될 예정이에요.",
     id = id,
-    logoImg = logoImg.toDomain(),
+    logoImg = logoImg?.toDomain(),
     name = name,
-    titleImg = titleImg.toDomain(),
+    titleImg = titleImg?.toDomain(),
     url = url
 )
 
-fun LogoImg.toDomain(): LogoImgModel = LogoImgModel(origin, thumb)
+fun LogoImg.toDomain(): LogoImgModel = LogoImgModel(
+    origin = origin ?: "",
+    thumb = thumb ?: ""
+)
 
 fun TitleImg.toDomain(): TitleImgModel = TitleImgModel(origin, thumb)
 
-fun SearchCompany.toDomain(): List<CompanyModel> = companies.map { it.toDomain() }
+private fun extractOffset(link: Any?): Int? {
+    return (link as? String)?.let {
+        it.toUri().getQueryParameter("offset")?.toInt()
+    }
+}
