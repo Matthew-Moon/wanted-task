@@ -1,5 +1,6 @@
 package com.wanted.task.presentation.list
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.wanted.task.domain.model.CompanyModel
 import com.wanted.task.presentation.theme.WantedBlack
 import com.wanted.task.presentation.theme.WantedGrey
 
@@ -27,8 +30,11 @@ import com.wanted.task.presentation.theme.WantedGrey
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CompanyCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    company: CompanyModel
 ) {
+    val processedText = remember { flattenLineBreaks(company.description) }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -38,16 +44,22 @@ fun CompanyCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             GlideImage(
-                model = "https://static.wanted.co.kr/images/wdes/0_5.435127bb.jpg",
+//                model = company.logoImg?.origin, TODO 기본이미지
+                model = company.logoImg?.origin,
                 contentDescription = "회사 로고",
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(52.dp)
+                    .border(0.5.dp, WantedGrey, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
+
+                contentScale = ContentScale.Crop,
+                // TODO
+//                loading = {},
+//                failure = {}
             )
             Text(
                 modifier = Modifier.padding(start = 6.dp),
-                text = "원티드랩",
+                text = company.name,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -58,9 +70,10 @@ fun CompanyCard(
 
         Text(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 10.dp)
                 .padding(horizontal = 6.dp),
-            text = "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려강산 대한사람 대한으로 길이 보전하세, 동해물과 백두산이 마르고 닳도록",
+            text = processedText,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = TextStyle(
@@ -74,8 +87,15 @@ fun CompanyCard(
     }
 }
 
+fun flattenLineBreaks(text: String): String {
+    return text
+        .replace("\n", " ")         // 모든 줄바꿈을 공백으로
+        .replace("\\s+".toRegex(), " ") // 여러 공백은 하나로
+        .trim()
+}
+
 @Preview
 @Composable
 fun CompanyCardPreview() {
-    CompanyCard()
+//    CompanyCard()
 }
