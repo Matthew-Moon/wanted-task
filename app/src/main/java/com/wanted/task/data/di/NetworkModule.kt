@@ -1,6 +1,6 @@
 package com.wanted.task.data.di
 
-//import com.wanted.task.data.service.WantedApiService
+import com.wanted.task.data.service.CompanyApiService
 import com.wanted.task.data.service.SearchApiService
 import dagger.Module
 import dagger.Provides
@@ -14,6 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+@Suppress("Unused")
 object NetworkModule {
     private const val BASE_URL = "https://openapi.wanted.jobs/v1/"
     private const val CLIENT_ID = "ocir8SVWIv03EUm6vCC7u2Rm"
@@ -50,5 +51,11 @@ object NetworkModule {
     @Singleton
     fun provideSearchApiService(retrofit: Retrofit): SearchApiService {
         return retrofit.create(SearchApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompanyApiService(retrofit: Retrofit): CompanyApiService {
+        return retrofit.create(CompanyApiService::class.java)
     }
 }

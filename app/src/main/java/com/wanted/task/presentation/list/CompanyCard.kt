@@ -45,7 +45,7 @@ fun CompanyCard(
         ) {
             GlideImage(
 //                model = company.logoImg?.origin, TODO 기본이미지
-                model = company.logoImg?.origin,
+                model = company.logoImg?.thumb,
                 contentDescription = "회사 로고",
                 modifier = Modifier
                     .size(52.dp)
