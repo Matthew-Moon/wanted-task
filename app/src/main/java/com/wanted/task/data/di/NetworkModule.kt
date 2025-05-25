@@ -14,6 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+@Suppress("Unused")
 object NetworkModule {
     private const val BASE_URL = "https://openapi.wanted.jobs/v1/"
     private const val CLIENT_ID = "ocir8SVWIv03EUm6vCC7u2Rm"

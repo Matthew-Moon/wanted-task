@@ -12,6 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+@Suppress("Unused")
 abstract class RepositoryModule {
     @Binds
     @Singleton
