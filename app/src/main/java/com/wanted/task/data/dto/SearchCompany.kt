@@ -34,8 +34,8 @@ data class LogoImg(
 )
 
 data class TitleImg(
-    val origin: String,
-    val thumb: String
+    val origin: String?,
+    val thumb: String?
 )
 
 
@@ -62,7 +62,10 @@ fun LogoImg.toDomain(): LogoImgModel = LogoImgModel(
     thumb = thumb ?: ""
 )
 
-fun TitleImg.toDomain(): TitleImgModel = TitleImgModel(origin, thumb)
+fun TitleImg.toDomain(): TitleImgModel = TitleImgModel(
+    origin = origin ?: "",
+    thumb = thumb ?: ""
+)
 
 private fun extractOffset(link: Any?): Int? {
     return (link as? String)?.let {
