@@ -1,6 +1,8 @@
 package com.wanted.task.data.di
 
+import com.wanted.task.data.repository.CompanyRepositoryImpl
 import com.wanted.task.data.repository.SearchRepositoryImpl
+import com.wanted.task.domain.repository.CompanyRepository
 import com.wanted.task.domain.repository.SearchRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,11 @@ abstract class RepositoryModule {
     abstract fun bindSearchRepository(
         impl: SearchRepositoryImpl
     ): SearchRepository
+
+
+    @Binds
+    @Singleton
+    abstract fun bindCompanyRepository(
+        impl: CompanyRepositoryImpl
+    ): CompanyRepository
 }

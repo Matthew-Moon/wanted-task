@@ -1,6 +1,6 @@
 package com.wanted.task.data.di
 
-//import com.wanted.task.data.service.WantedApiService
+import com.wanted.task.data.service.CompanyApiService
 import com.wanted.task.data.service.SearchApiService
 import dagger.Module
 import dagger.Provides
@@ -50,5 +50,11 @@ object NetworkModule {
     @Singleton
     fun provideSearchApiService(retrofit: Retrofit): SearchApiService {
         return retrofit.create(SearchApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompanyApiService(retrofit: Retrofit): CompanyApiService {
+        return retrofit.create(CompanyApiService::class.java)
     }
 }
