@@ -1,6 +1,7 @@
 package com.wanted.task.presentation.list
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -31,13 +31,15 @@ import com.wanted.task.presentation.theme.WantedGrey
 @Composable
 fun CompanyCard(
     modifier: Modifier = Modifier,
-    company: CompanyModel
+    company: CompanyModel,
+    onClick: () -> Unit
 ) {
     val processedText = remember { flattenLineBreaks(company.description) }
 
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(12.dp)
     ) {
         Row(
@@ -92,10 +94,4 @@ fun flattenLineBreaks(text: String): String {
         .replace("\n", " ")         // 모든 줄바꿈을 공백으로
         .replace("\\s+".toRegex(), " ") // 여러 공백은 하나로
         .trim()
-}
-
-@Preview
-@Composable
-fun CompanyCardPreview() {
-//    CompanyCard()
 }
