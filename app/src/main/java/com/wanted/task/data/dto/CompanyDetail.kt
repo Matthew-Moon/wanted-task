@@ -45,8 +45,8 @@ data class Image(
 )
 
 data class LogoUrl(
-    val origin: String,
-    val thumb: String
+    val origin: String?,
+    val thumb: String?
 )
 
 data class Location(
@@ -112,8 +112,8 @@ fun Image.toDomain(): ImageModel {
 
 fun LogoUrl.toDomain(): LogoUrlModel {
     return LogoUrlModel(
-        origin = origin,
-        thumb = thumb
+        origin = origin ?: "",
+        thumb = thumb ?: ""
     )
 }
 

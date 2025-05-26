@@ -31,12 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
-import timber.log.Timber
 
 @Composable
 fun CompanyListScreen(
     modifier: Modifier = Modifier,
-    viewModel: CompanyListViewModel = hiltViewModel()
+    viewModel: CompanyListViewModel = hiltViewModel(),
+    onCompanyClick: (Int) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     val companyList by viewModel.companyList.collectAsState()
@@ -89,7 +89,9 @@ fun CompanyListScreen(
                     .padding(innerPadding)
             ) {
                 items(companyList) { company ->
-                    CompanyCard(company = company)
+                    CompanyCard(company = company) {
+                        onCompanyClick(company.id)
+                    }
                     HorizontalDivider(
                         modifier = Modifier
                             .padding(top = 20.dp)
