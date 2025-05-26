@@ -3,14 +3,18 @@ package com.wanted.task.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.wanted.task.presentation.detail.CompanyDetailScreen
@@ -18,15 +22,28 @@ import com.wanted.task.presentation.list.CompanyListScreen
 import com.wanted.task.presentation.navigation.ScreenRoute
 import com.wanted.task.presentation.theme.WantedTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.runtime.getValue
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
 
         setContent {
             val navController = rememberNavController()
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = backStackEntry?.destination?.route
+
+            // 상태바 아이콘 색상 분기 처리
+            LaunchedEffect(currentRoute) {
+                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
+                    when (currentRoute) {
+                        ScreenRoute.CompanyDetail.route -> false // 상태바 아이콘: 흰색
+                        else -> true                             // 상태바 아이콘: 검정색
+                    }
+            }
+
             CompositionLocalProvider(LocalOverscrollFactory provides null) {
                 WantedTaskTheme {
                     Surface(modifier = Modifier.fillMaxSize()) {
