@@ -5,12 +5,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -32,10 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.wanted.task.R
 import com.wanted.task.domain.model.ImageModel
+import com.wanted.task.presentation.theme.BorderGrey
 import com.wanted.task.presentation.theme.WantedBlack
-import com.wanted.task.presentation.theme.WantedGrey
 import com.wanted.task.presentation.theme.WantedWhite
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -45,41 +49,56 @@ fun CompanyImageSlider(
     logoUrl: String,
     onBackClick: () -> Unit
 ) {
-    if (images.isEmpty()) return
+    val displayImages = remember(images) {
+        if (images.isEmpty()) listOf(ImageModel.placeholder()) else images
+    }
 
-    val imageCount = images.size
-    val isSingleImage = imageCount == 1
+    val imageCount = displayImages.size
 
     val pagerState = rememberPagerState(
-        initialPage = if (isSingleImage) 0 else Int.MAX_VALUE / 2,
-        pageCount = { if (isSingleImage) 1 else Int.MAX_VALUE }
+        initialPage = 0,
+        pageCount = { imageCount }
     )
 
     val currentImageIndex by remember {
-        derivedStateOf {
-            if (isSingleImage) 0 else pagerState.currentPage.floorMod(imageCount)
-        }
+        derivedStateOf { pagerState.currentPage }
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1.5f) // 이미지 높이 고정
+            .aspectRatio(1.5f)
     ) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.matchParentSize()
         ) { page ->
-            val imageIndex = page.floorMod(images.size)
+            val image = displayImages[page]
+            Box(modifier = Modifier.fillMaxSize()) {
+                GlideImage(
+                    model = image.thumb,
+                    contentDescription = "회사 이미지 $page",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
-            GlideImage(
-                model = images[imageIndex].thumb,
-                contentDescription = "회사 이미지 $imageIndex",
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+                // 상단 1/4 음영 처리 (선택 사항)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.25f)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Black.copy(alpha = 0.4f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                )
+            }
         }
+
 
         Box(
             modifier = Modifier
@@ -87,27 +106,29 @@ fun CompanyImageSlider(
                 .padding(end = 12.dp, bottom = 12.dp)
                 .background(WantedBlack.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
                 .width(42.dp)
-                .height(24.dp), // 선택사항: 높이도 고정 가능
+                .height(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${currentImageIndex + 1}/${images.size}",
+                text = "${currentImageIndex + 1}/$imageCount",
                 color = WantedWhite,
                 fontSize = 12.sp
             )
         }
 
-        // 왼쪽 상단: 뒤로가기 아이콘
+        // 뒤로가기 아이콘
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.common_ic_back_24),
             contentDescription = "Back",
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp)
+                .padding(start = 16.dp)
+                .statusBarsPadding()
                 .clickable { onBackClick() },
             tint = WantedWhite
         )
 
+        // 회사 로고
         GlideImage(
             model = logoUrl,
             contentDescription = "회사 로고",
@@ -117,16 +138,10 @@ fun CompanyImageSlider(
                 .offset(y = 30.dp)
                 .size(60.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .border(0.5.dp, WantedGrey, RoundedCornerShape(12.dp))
-                .background(Color.White)
+                .border(0.5.dp, BorderGrey, RoundedCornerShape(12.dp))
+                .background(Color.White),
+            failure = placeholder(R.drawable.ic_default_logo),
+            loading = placeholder(R.drawable.ic_default_logo)
         )
     }
-}
-
-/**
- * 정수를 다른 정수로 나눈 나머지를 양수로 반환하는 확장 함수
- */
-fun Int.floorMod(other: Int): Int = when (other) {
-    0 -> this
-    else -> this - floorDiv(other) * other
 }
