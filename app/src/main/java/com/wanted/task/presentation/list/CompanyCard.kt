@@ -22,7 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import com.wanted.task.R
 import com.wanted.task.domain.model.CompanyModel
+import com.wanted.task.presentation.theme.BorderGrey
 import com.wanted.task.presentation.theme.WantedBlack
 import com.wanted.task.presentation.theme.WantedGrey
 
@@ -46,18 +49,16 @@ fun CompanyCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             GlideImage(
-//                model = company.logoImg?.origin, TODO 기본이미지
                 model = company.logoImg?.thumb,
                 contentDescription = "회사 로고",
                 modifier = Modifier
                     .size(52.dp)
-                    .border(0.5.dp, WantedGrey, RoundedCornerShape(12.dp))
+                    .border(0.5.dp, BorderGrey, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp)),
-
                 contentScale = ContentScale.Crop,
-                // TODO
-//                loading = {},
-//                failure = {}
+                failure = placeholder(R.drawable.ic_default_logo),
+                loading = placeholder(R.drawable.ic_default_logo)
+
             )
             Text(
                 modifier = Modifier.padding(start = 6.dp),
