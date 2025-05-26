@@ -20,19 +20,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.wanted.task.presentation.theme.WantedBlack
 
 
 @Composable
 fun CompanyDetailScreen(
-    viewModel: CompanyDetailViewModel = hiltViewModel()
+    viewModel: CompanyDetailViewModel = hiltViewModel(),
+    companyId: Int,
+    navController: NavHostController
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
     val detail by viewModel.companyDetail.collectAsState()
     val error by viewModel.errorMessage.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadCompanyDetail(15095)
+        viewModel.loadCompanyDetail(companyId.toLong())
     }
 
 
@@ -55,6 +58,7 @@ fun CompanyDetailScreen(
                     CompanyImageSlider(
                         images = model.images,
                         logoUrl = model.logoUrl.thumb,
+                        onBackClick = { navController.popBackStack() }
                     )
 
                     Text(
