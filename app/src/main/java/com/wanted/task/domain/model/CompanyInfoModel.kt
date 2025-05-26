@@ -28,7 +28,19 @@ data class ImageModel(
     val isTitle: Boolean,
     val origin: String,
     val thumb: String
-)
+) {
+    companion object {
+        fun placeholder(): ImageModel {
+            val url = "https://cdn.pixabay.com/photo/2019/07/14/16/27/pen-4337521_1280.jpg"
+            return ImageModel(
+                id = -1,
+                isTitle = false,
+                origin = url,
+                thumb = url
+            )
+        }
+    }
+}
 
 data class LogoUrlModel(
     val origin: String,
