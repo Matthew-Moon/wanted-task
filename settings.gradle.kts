@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Wanted Task"
 include(":app")
- 
+include(":presentation")
+include(":domain")
+include(":data")
