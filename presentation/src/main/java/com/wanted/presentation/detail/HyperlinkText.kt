@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -17,7 +18,8 @@ import com.wanted.presentation.theme.SkyBlue
 fun HyperlinkText(
     modifier: Modifier,
     title: String,
-    url: String
+    url: String,
+    style: TextStyle
 ) {
     val context = LocalContext.current
 
@@ -39,6 +41,7 @@ fun HyperlinkText(
             text = url,
             color = SkyBlue,
             textDecoration = TextDecoration.Underline,
+            style = style
         )
 
     }
