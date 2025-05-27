@@ -35,11 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
 import com.wanted.task.R
 import com.wanted.task.domain.model.ImageModel
-import com.wanted.task.presentation.theme.BorderGrey
+import com.wanted.task.presentation.common.CompanyLogoImage
 import com.wanted.task.presentation.theme.Black
+import com.wanted.task.presentation.theme.BorderGrey
 import com.wanted.task.presentation.theme.White
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -128,10 +128,7 @@ fun CompanyImageSlider(
             tint = White
         )
 
-        // 회사 로고
-        GlideImage(
-            model = logoUrl,
-            contentDescription = "회사 로고",
+        CompanyLogoImage(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(start = 16.dp)
@@ -140,8 +137,7 @@ fun CompanyImageSlider(
                 .clip(RoundedCornerShape(12.dp))
                 .border(0.5.dp, BorderGrey, RoundedCornerShape(12.dp))
                 .background(Color.White),
-            failure = placeholder(R.drawable.ic_default_logo),
-            loading = placeholder(R.drawable.ic_default_logo)
+            model = logoUrl
         )
     }
 }
