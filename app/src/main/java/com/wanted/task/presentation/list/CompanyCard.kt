@@ -14,23 +14,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
-import com.wanted.task.R
 import com.wanted.task.domain.model.CompanyModel
+import com.wanted.task.presentation.common.CompanyLogoImage
+import com.wanted.task.presentation.theme.Black
 import com.wanted.task.presentation.theme.BorderGrey
-import com.wanted.task.presentation.theme.WantedBlack
-import com.wanted.task.presentation.theme.WantedGrey
+import com.wanted.task.presentation.theme.Grey
 
-
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CompanyCard(
     modifier: Modifier = Modifier,
@@ -48,17 +42,12 @@ fun CompanyCard(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GlideImage(
-                model = company.logoImg?.thumb,
-                contentDescription = "회사 로고",
+            CompanyLogoImage(
                 modifier = Modifier
                     .size(52.dp)
                     .border(0.5.dp, BorderGrey, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop,
-                failure = placeholder(R.drawable.ic_default_logo),
-                loading = placeholder(R.drawable.ic_default_logo)
-
+                model = company.logoImg?.thumb
             )
             Text(
                 modifier = Modifier.padding(start = 6.dp),
@@ -66,7 +55,7 @@ fun CompanyCard(
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = WantedBlack
+                    color = Black
                 )
             )
         }
@@ -83,7 +72,7 @@ fun CompanyCard(
                 lineHeight = 20.sp,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                color = WantedGrey,
+                color = Grey,
             )
         )
 

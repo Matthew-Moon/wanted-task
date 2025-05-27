@@ -23,10 +23,12 @@ import com.wanted.task.presentation.navigation.ScreenRoute
 import com.wanted.task.presentation.theme.WantedTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.runtime.getValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.wanted.task.presentation.theme.WantedBlack
+import com.wanted.task.presentation.theme.Black
 
 
 @Composable
@@ -69,7 +69,7 @@ fun CompanyDetailScreen(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = WantedBlack
+                            color = Black
                         )
                     )
 
@@ -81,7 +81,7 @@ fun CompanyDetailScreen(
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = WantedBlack
+                            color = Black
                         )
                     )
                     DescriptionText(
@@ -92,7 +92,7 @@ fun CompanyDetailScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
-                            color = WantedBlack
+                            color = Black
                         )
                     )
 

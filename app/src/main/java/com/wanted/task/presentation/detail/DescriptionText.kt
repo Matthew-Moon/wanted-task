@@ -43,12 +43,7 @@ fun DescriptionText(
 
                 val url = match.value
                 pushStringAnnotation(tag = "URL", annotation = url)
-                withStyle(
-                    style = SpanStyle(
-                        color = Color.Blue,
-                        textDecoration = TextDecoration.Underline
-                    )
-                ) {
+                withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                     append(url)
                 }
                 pop()
@@ -67,9 +62,6 @@ fun DescriptionText(
         text = annotatedText,
         style = style,
         modifier = modifier
-            .clickable(enabled = true, indication = null, interactionSource = remember { MutableInteractionSource() }) {
-                // TODO
-            }
             .pointerInput(Unit) {
                 detectTapGestures { offsetPosition ->
                     layoutResult?.let { layout ->
@@ -83,7 +75,7 @@ fun DescriptionText(
                                 }
                                 val intent = Intent(Intent.ACTION_VIEW, finalUrl.toUri())
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                ContextCompat.startActivity(context, intent, null)
+                                context.startActivity(intent, null)
                             }
                     }
                 }

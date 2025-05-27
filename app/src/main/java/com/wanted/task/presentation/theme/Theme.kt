@@ -8,12 +8,12 @@ private val WantedColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = WantedWhite,
-    surface = WantedWhite,
-    surfaceVariant = WantedWhite,
-    onBackground = WantedBlack,
-    onSurface = WantedBlack,
-    onSurfaceVariant = WantedBlack
+    background = White,
+    surface = White,
+    surfaceVariant = White,
+    onBackground = Black,
+    onSurface = Black,
+    onSurfaceVariant = Black
 )
 
 

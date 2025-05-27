@@ -80,4 +80,7 @@ dependencies {
 
     // Log Timber
     implementation(libs.timber)
+
+    // Splashscreen
+    implementation(libs.androidx.core.splashscreen)
 }
