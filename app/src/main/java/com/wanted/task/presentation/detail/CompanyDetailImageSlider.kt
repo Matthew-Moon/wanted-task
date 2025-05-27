@@ -39,8 +39,8 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.wanted.task.R
 import com.wanted.task.domain.model.ImageModel
 import com.wanted.task.presentation.theme.BorderGrey
-import com.wanted.task.presentation.theme.WantedBlack
-import com.wanted.task.presentation.theme.WantedWhite
+import com.wanted.task.presentation.theme.Black
+import com.wanted.task.presentation.theme.White
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -104,14 +104,14 @@ fun CompanyImageSlider(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 12.dp, bottom = 12.dp)
-                .background(WantedBlack.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
+                .background(Black.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
                 .width(42.dp)
                 .height(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "${currentImageIndex + 1}/$imageCount",
-                color = WantedWhite,
+                color = White,
                 fontSize = 12.sp
             )
         }
@@ -125,7 +125,7 @@ fun CompanyImageSlider(
                 .padding(start = 16.dp)
                 .statusBarsPadding()
                 .clickable { onBackClick() },
-            tint = WantedWhite
+            tint = White
         )
 
         // 회사 로고

@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wanted.task.presentation.theme.WantedTaskTheme
-import com.wanted.task.presentation.theme.WantedWhite
+import com.wanted.task.presentation.theme.White
 
 @Composable
 fun CompanySearchBar(
@@ -55,7 +55,7 @@ fun CompanySearchBar(
             textStyle = textStyle,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(WantedWhite)
+                .background(White)
                 .padding(horizontal = 12.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search

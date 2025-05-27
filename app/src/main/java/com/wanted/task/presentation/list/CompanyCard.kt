@@ -26,8 +26,8 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.wanted.task.R
 import com.wanted.task.domain.model.CompanyModel
 import com.wanted.task.presentation.theme.BorderGrey
-import com.wanted.task.presentation.theme.WantedBlack
-import com.wanted.task.presentation.theme.WantedGrey
+import com.wanted.task.presentation.theme.Black
+import com.wanted.task.presentation.theme.Grey
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -66,7 +66,7 @@ fun CompanyCard(
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = WantedBlack
+                    color = Black
                 )
             )
         }
@@ -83,7 +83,7 @@ fun CompanyCard(
                 lineHeight = 20.sp,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                color = WantedGrey,
+                color = Grey,
             )
         )
 
