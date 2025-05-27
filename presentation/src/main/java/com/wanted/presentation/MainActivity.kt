@@ -56,7 +56,9 @@ class MainActivity : ComponentActivity() {
                             composable(ScreenRoute.CompanyList.route) {
                                 CompanyListScreen(
                                     onCompanyClick = { companyId ->
-                                        navController.navigate(ScreenRoute.CompanyDetail.createRoute(companyId))
+                                        navController.navigate(ScreenRoute.CompanyDetail.createRoute(companyId)) {
+                                            launchSingleTop = true
+                                        }
                                     }
                                 )
                             }
