@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wanted.domain.model.CompanyModel
+import com.wanted.presentation.R
 import com.wanted.presentation.common.CompanyLogoImage
 import com.wanted.presentation.theme.Black
 import com.wanted.presentation.theme.BorderGrey
@@ -54,7 +56,7 @@ fun CompanyCard(
                 text = company.name,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.wantedsans_bold)),
                     color = Black
                 )
             )
@@ -71,7 +73,7 @@ fun CompanyCard(
             style = TextStyle(
                 lineHeight = 20.sp,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
+                fontFamily = FontFamily(Font(R.font.wantedsans_medium)),
                 color = Grey,
             )
         )

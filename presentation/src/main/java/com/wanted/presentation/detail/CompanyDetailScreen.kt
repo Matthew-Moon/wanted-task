@@ -16,11 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.wanted.presentation.R
 import com.wanted.presentation.theme.Black
 
 
@@ -68,7 +70,7 @@ fun CompanyDetailScreen(
                         text = model.name,
                         style = TextStyle(
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = FontFamily(Font(R.font.wantedsans_extrabold)),
                             color = Black
                         )
                     )
@@ -80,7 +82,7 @@ fun CompanyDetailScreen(
                         text = "기업 상세",
                         style = TextStyle(
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily(Font(R.font.wantedsans_bold)),
                             color = Black
                         )
                     )
@@ -91,7 +93,7 @@ fun CompanyDetailScreen(
                         text = model.description,
                         style = TextStyle(
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
+                            fontFamily = FontFamily(Font(R.font.wantedsans_medium)),
                             color = Black
                         )
                     )
@@ -102,7 +104,12 @@ fun CompanyDetailScreen(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp),
                             title = "회사 홈페이지",
-                            url = model.link
+                            url = model.link,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.wantedsans_regular)),
+                                color = Black
+                            )
                         )
                     }
 
@@ -111,7 +118,12 @@ fun CompanyDetailScreen(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp),
                             title = "원티드 바로가기",
-                            url = model.url
+                            url = model.url,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.wantedsans_regular)),
+                                color = Black
+                            )
                         )
                     }
 
