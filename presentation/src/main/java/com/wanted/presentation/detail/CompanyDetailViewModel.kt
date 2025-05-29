@@ -19,35 +19,32 @@ class CompanyDetailViewModel @Inject constructor(
     private val getCompanyDetailUseCase: GetCompanyDetailUseCase
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _uiState = MutableStateFlow<CompanyDetailUiState>(CompanyDetailUiState.Idle)
+    val uiState: StateFlow<CompanyDetailUiState> = _uiState.asStateFlow()
 
-    private val _companyDetail = MutableStateFlow<CompanyInfoModel?>(null)
-    val companyDetail: StateFlow<CompanyInfoModel?> = _companyDetail.asStateFlow()
-
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
-
-    fun loadCompanyDetail(companyId: Long) {
+    fun loadCompanyDetail(companyId: Int) {
         viewModelScope.launch {
-            _isLoading.value = true
-            _errorMessage.value = null
+            _uiState.value = CompanyDetailUiState.Loading
 
             when (val result = getCompanyDetailUseCase(companyId)) {
                 is DomainResult.Success -> {
-                    _companyDetail.value = result.data
                     Timber.d("Company detail loaded: ${result.data}")
+                    _uiState.value = CompanyDetailUiState.Success(result.data)
                 }
 
                 is DomainResult.Failure -> {
                     Timber.e("API Error: ${result.error.message}")
-                    _errorMessage.value = result.error.message
+                    _uiState.value = CompanyDetailUiState.Error(result.error.message)
                 }
             }
-
-            _isLoading.value = false
         }
     }
-
-
 }
+
+sealed interface CompanyDetailUiState {
+    object Idle : CompanyDetailUiState
+    object Loading : CompanyDetailUiState
+    data class Success(val company: CompanyInfoModel) : CompanyDetailUiState
+    data class Error(val message: String) : CompanyDetailUiState
+}
+

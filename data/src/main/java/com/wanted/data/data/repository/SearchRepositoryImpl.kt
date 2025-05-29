@@ -14,7 +14,7 @@ class SearchRepositoryImpl @Inject constructor(
     private val searchApiService: SearchApiService
 ) : SearchRepository {
 
-    override suspend fun getSearchCompany(query: String, offset: Int, limit: Long): DomainResult<PagedCompanyModel> =
+    override suspend fun getSearchCompany(query: String, offset: Int, limit: Int): DomainResult<PagedCompanyModel> =
         safeApiCall {
             searchApiService.getSearchCompany(
                 query = query,
