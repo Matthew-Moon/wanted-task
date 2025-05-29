@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.wanted.presentation.theme.Grey
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -39,16 +41,18 @@ fun CompanyListScreen(
     onCompanyClick: (Int) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
-    val companyList by viewModel.companyList.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
-
+    // 무한 스크롤 처리
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
             .collect { lastIndex ->
-                if (lastIndex == companyList.lastIndex && !isLoading) {
+                val companies = (uiState as? CompanyListUiState.Success)?.companies.orEmpty()
+                val isLoading = (uiState as? CompanyListUiState.Success)?.isAppending ?: false
+
+                if (lastIndex == companies.lastIndex && !isLoading) {
                     viewModel.loadNextPage()
                 }
             }
@@ -64,7 +68,7 @@ fun CompanyListScreen(
                 value = query,
                 onValueChange = { query = it },
                 onImeActionSearch = {
-                    if (query.isNotBlank()) viewModel.searchCompany(query)
+                    viewModel.searchCompany(query)
                 },
                 trailingIcon = {
                     Icon(
@@ -76,41 +80,70 @@ fun CompanyListScreen(
                                 query = ""
                                 viewModel.searchCompany("")
                             },
-                        tint = Color.Gray
+                        tint = Grey
                     )
                 }
             )
         },
         content = { innerPadding ->
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                items(companyList) { company ->
-                    CompanyCard(company = company) {
-                        onCompanyClick(company.id)
-                    }
-                    HorizontalDivider(
+            when (val state = uiState) {
+
+                CompanyListUiState.EmptyQuery -> Unit
+
+                is CompanyListUiState.Loading -> {
+                    Box(
                         modifier = Modifier
-                            .padding(top = 20.dp)
-                            .padding(horizontal = 16.dp),
-                        color = Color(0xFFE0E0E0),
-                        thickness = 1.dp
-                    )
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
 
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                is CompanyListUiState.Success -> {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        items(state.companies) { company ->
+                            CompanyCard(company = company) {
+                                onCompanyClick(company.id)
+                            }
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .padding(top = 20.dp)
+                                    .padding(horizontal = 16.dp),
+                                color = Color(0xFFE0E0E0),
+                                thickness = 1.dp
+                            )
                         }
+
+                        if (state.isAppending) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            }
+                        }
+                    }
+                }
+
+                is CompanyListUiState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("에러 발생: ${state.message}", color = Color.Red)
                     }
                 }
             }
