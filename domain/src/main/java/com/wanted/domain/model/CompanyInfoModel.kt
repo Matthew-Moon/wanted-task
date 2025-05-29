@@ -58,12 +58,3 @@ data class ViewportPositionModel(
     val lat: Double,
     val lng: Double
 )
-//data class NortheastModel(
-//    val lat: Double,
-//    val lng: Double
-//)
-//
-//data class SouthwestModel(
-//    val lat: Double,
-//    val lng: Double
-//)
