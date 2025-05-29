@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetCompanyListUseCase @Inject constructor(
     private val searchRepository: SearchRepository
 ) {
-    suspend operator fun invoke(query: String, offset: Int, limit: Long): DomainResult<PagedCompanyModel> {
+    suspend operator fun invoke(query: String, offset: Int, limit: Int): DomainResult<PagedCompanyModel> {
         return searchRepository.getSearchCompany(
             query = query,
             offset = offset,

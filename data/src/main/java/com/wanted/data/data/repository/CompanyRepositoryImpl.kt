@@ -13,7 +13,7 @@ class CompanyRepositoryImpl @Inject constructor(
     private val companyApiService: CompanyApiService
 ) : CompanyRepository {
 
-    override suspend fun getCompanyDetail(companyId: Long): DomainResult<CompanyInfoModel> =
+    override suspend fun getCompanyDetail(companyId: Int): DomainResult<CompanyInfoModel> =
         safeApiCall {
             companyApiService.getCompanyDetail(
                 companyId = companyId,

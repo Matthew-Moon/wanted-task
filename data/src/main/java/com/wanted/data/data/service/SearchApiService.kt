@@ -10,7 +10,7 @@ interface SearchApiService {
     suspend fun getSearchCompany(
         @Query("query") query: String,
         @Query("offset") offset: Int = 0,
-        @Query("limit") limit: Long = 20,
+        @Query("limit") limit: Int = 20,
     ): ResponseDto<SearchCompany>
 
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetCompanyDetailUseCase @Inject constructor(
     private val companyRepository: CompanyRepository
 ) {
-        suspend operator fun invoke(companyId: Long): DomainResult<CompanyInfoModel> {
+        suspend operator fun invoke(companyId: Int): DomainResult<CompanyInfoModel> {
         return companyRepository.getCompanyDetail(companyId = companyId)
     }
 }

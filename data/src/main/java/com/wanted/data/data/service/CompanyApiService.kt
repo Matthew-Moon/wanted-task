@@ -8,7 +8,7 @@ import retrofit2.http.Path
 interface CompanyApiService {
     @GET("companies/{company_id}")
     suspend fun getCompanyDetail(
-        @Path(value = "company_id", encoded = true) companyId: Long,
+        @Path(value = "company_id", encoded = true) companyId: Int,
     ): ResponseDto<CompanyDetail>
 
 }
