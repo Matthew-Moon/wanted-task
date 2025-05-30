@@ -6,6 +6,7 @@ import com.wanted.domain.model.PagedCompanyModel
 import com.wanted.domain.model.TitleImgModel
 import com.wanted.domain.result.DomainResult
 import com.wanted.domain.result.ErrorBody
+import com.wanted.domain.usecase.GetCompanyAutocompleteUseCase
 import com.wanted.domain.usecase.GetCompanyListUseCase
 import com.wanted.presentation.list.CompanyListUiState
 import com.wanted.presentation.list.CompanyListViewModel
@@ -27,7 +28,8 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CompanyListViewModelTest {
 
-    private lateinit var mockUseCase: GetCompanyListUseCase
+    private lateinit var getCompanyListUseCase: GetCompanyListUseCase
+    private lateinit var getCompanyAutocompleteUseCase: GetCompanyAutocompleteUseCase
     private lateinit var viewModel: CompanyListViewModel
 
     private val testDispatcher = StandardTestDispatcher()
@@ -35,8 +37,9 @@ class CompanyListViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        mockUseCase = mockk()
-        viewModel = CompanyListViewModel(mockUseCase)
+        getCompanyListUseCase = mockk()
+        getCompanyAutocompleteUseCase = mockk()
+        viewModel = CompanyListViewModel(getCompanyListUseCase, getCompanyAutocompleteUseCase)
     }
 
     @After
@@ -66,7 +69,7 @@ class CompanyListViewModelTest {
     @Test
     fun `검색 성공 시 Success 상태로 전이`() = runTest {
         val testCompanies = listOf(createTestCompany(1, "원티드랩"))
-        coEvery { mockUseCase("원티드랩", 0, 20) } returns DomainResult.Success(
+        coEvery { getCompanyListUseCase("원티드랩", 0, 20) } returns DomainResult.Success(
             PagedCompanyModel(testCompanies, nextOffset = null, prevOffset = null)
         )
 
@@ -81,7 +84,7 @@ class CompanyListViewModelTest {
     @Test
     fun `검색 실패 시 Error 상태로 전이`() = runTest {
         coEvery {
-            mockUseCase("fail", 0, 20)
+            getCompanyListUseCase("fail", 0, 20)
         } returns DomainResult.Failure(ErrorBody("ERR", "에러 발생"))
 
         viewModel.searchCompany("fail")
@@ -97,10 +100,10 @@ class CompanyListViewModelTest {
         val firstPage = (1..20).map { createTestCompany(it, "Company $it") }
         val secondPage = (21..25).map { createTestCompany(it, "Company $it") }
 
-        coEvery { mockUseCase("원티드랩", 0, 20) } returns DomainResult.Success(
+        coEvery { getCompanyListUseCase("원티드랩", 0, 20) } returns DomainResult.Success(
             PagedCompanyModel(firstPage, nextOffset = 20, prevOffset = null)
         )
-        coEvery { mockUseCase("원티드랩", 20, 20) } returns DomainResult.Success(
+        coEvery { getCompanyListUseCase("원티드랩", 20, 20) } returns DomainResult.Success(
             PagedCompanyModel(secondPage, nextOffset = null, prevOffset = null)
         )
 
@@ -120,7 +123,7 @@ class CompanyListViewModelTest {
         val companies = (1..10).map { createTestCompany(it, "C$it") }
 
         coEvery {
-            mockUseCase("none", 0, 20)
+            getCompanyListUseCase("none", 0, 20)
         } returns DomainResult.Success(
             PagedCompanyModel(companies, nextOffset = null, prevOffset = null)
         )
