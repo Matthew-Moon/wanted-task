@@ -17,20 +17,17 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.wanted.presentation.common.ErrorText
 import com.wanted.presentation.theme.Grey
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -40,18 +37,24 @@ fun CompanyListScreen(
     viewModel: CompanyListViewModel = hiltViewModel(),
     onCompanyClick: (Int) -> Unit
 ) {
-    var query by remember { mutableStateOf("") }
+    val query by viewModel.query.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
+    val lastSearchType by viewModel.lastSearchType.collectAsState()
     val listState = rememberLazyListState()
 
-    // 무한 스크롤 처리
+    LaunchedEffect(query) {
+        val isSearchInProgress = uiState is CompanyListUiState.Success || uiState is CompanyListUiState.Loading
+        if (query.isNotBlank() && !isSearchInProgress) {
+            viewModel.autoSearchCompany(query)
+        }
+    }
+
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
             .collect { lastIndex ->
                 val companies = (uiState as? CompanyListUiState.Success)?.companies.orEmpty()
-                val isLoading = (uiState as? CompanyListUiState.Success)?.isAppending ?: false
-
+                val isLoading = (uiState as? CompanyListUiState.Success)?.isAppending == true
                 if (lastIndex == companies.lastIndex && !isLoading) {
                     viewModel.loadNextPage()
                 }
@@ -66,7 +69,7 @@ fun CompanyListScreen(
         topBar = {
             CompanySearchBar(
                 value = query,
-                onValueChange = { query = it },
+                onValueChange = { viewModel.updateQuery(it) },
                 onImeActionSearch = {
                     viewModel.searchCompany(query)
                 },
@@ -77,7 +80,7 @@ fun CompanyListScreen(
                         modifier = Modifier
                             .size(20.dp)
                             .clickable {
-                                query = ""
+                                viewModel.updateQuery("")
                                 viewModel.searchCompany("")
                             },
                         tint = Grey
@@ -86,22 +89,31 @@ fun CompanyListScreen(
             )
         },
         content = { innerPadding ->
-            when (val state = uiState) {
-
-                CompanyListUiState.EmptyQuery -> Unit
-
-                is CompanyListUiState.Loading -> {
-                    Box(
+            when {
+                // 자동완성 경로로 진입했으면 자동완성 결과 UI
+                lastSearchType == SearchType.AUTOCOMPLETE && uiState is CompanyListUiState.Autocomplete -> {
+                    val state = uiState as CompanyListUiState.Autocomplete
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding),
-                        contentAlignment = Alignment.Center
+                            .padding(innerPadding)
                     ) {
-                        CircularProgressIndicator()
+                        items(state.results) { autoItem ->
+                            AutocompleteCard(
+                                model = autoItem,
+                                onClick = {
+                                    // 자동완성 아이템 클릭시 자동완성 경로로 설정
+                                    viewModel.setLastSearchType(SearchType.AUTOCOMPLETE)
+                                    onCompanyClick(autoItem.companyId)
+                                }
+                            )
+                        }
                     }
                 }
 
-                is CompanyListUiState.Success -> {
+                // 수동검색(엔터)로 진입했으면 리스트 결과 UI
+                lastSearchType == SearchType.PASSIVITY && uiState is CompanyListUiState.Success -> {
+                    val state = uiState as CompanyListUiState.Success
                     LazyColumn(
                         state = listState,
                         modifier = Modifier
@@ -120,7 +132,6 @@ fun CompanyListScreen(
                                 thickness = 1.dp
                             )
                         }
-
                         if (state.isAppending) {
                             item {
                                 Box(
@@ -136,16 +147,32 @@ fun CompanyListScreen(
                     }
                 }
 
-                is CompanyListUiState.Error -> {
+                // 로딩 화면
+                uiState is CompanyListUiState.Loading -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("에러 발생: ${state.message}", color = Color.Red)
+                        CircularProgressIndicator()
                     }
                 }
+
+                // 에러 화면
+                uiState is CompanyListUiState.Error -> {
+                    val errorState = uiState as CompanyListUiState.Error
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ErrorText(errorState.message)
+                    }
+                }
+
+                else -> {}
             }
         }
     )
