@@ -1,6 +1,18 @@
 # wanted-task
 원티드 사전과제
 
+#. 실행 GIF
+
+![Image](https://github.com/user-attachments/assets/3b3c994e-0945-4ed8-9559-c9c5d16160cf)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+#. 아키텍처 구조
+
+![image](https://github.com/user-attachments/assets/bcf14e12-da44-43f0-8f18-21e2f44cb213)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 #. 기술스택
 
@@ -21,6 +33,6 @@
 | 로깅     | Timber                      | 간편한 로그 출력             |
 | 테스트    | JUnit / Espresso / MockK    | 단위 테스트 및 UI 테스트 프레임워크 |
 | 빌드     | Gradle (Kotlin DSL)         | 프로젝트 빌드 관리            |
-|     | Android Gradle Plugin (AGP) | 버전: 8.9.3             |
+|        | Android Gradle Plugin (AGP) | 버전: 8.9.3             |
 |        | Gradle                      | 버전: 8.11.1            |
 | IDE    | Android Studio Meerkat      | 버전: 2024.3.1 Patch 1  |
