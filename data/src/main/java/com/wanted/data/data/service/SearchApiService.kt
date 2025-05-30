@@ -1,6 +1,7 @@
 package com.wanted.data.data.service
 
 import com.wanted.data.data.dto.SearchCompany
+import com.wanted.data.data.dto.SearchCompanyAutoComplete
 import com.wanted.data.data.network.ResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,5 +13,10 @@ interface SearchApiService {
         @Query("offset") offset: Int = 0,
         @Query("limit") limit: Int = 20,
     ): ResponseDto<SearchCompany>
+
+    @GET("search/company/autocomplete")
+    suspend fun getSearchCompanyAutocomplete(
+        @Query("query") query: String,
+    ): ResponseDto<SearchCompanyAutoComplete>
 
 }
